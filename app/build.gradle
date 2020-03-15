@@ -1,13 +1,12 @@
 apply plugin: 'com.android.application'
 
-apply plugin: 'com.apollographql.apollo'
-
-
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
+
+apply plugin: 'com.apollographql.apollo'
 
 
 android {
@@ -80,5 +79,15 @@ dependencies {
 
 }
 apollo {
-    generateKotlinModels.set(true) // or false for Java models
+    setGenerateKotlinModels(true)
+    service("yelp") {
+        sourceFolder.set("com/example")
+        rootPackageName.set("com.example")
+    }
+    onCompilationUnit {
+        schemaFile.set(file("app/src/main/graphql/com/example/currentchallenge/schema.json"))
+        graphqlSourceDirectorySet.exclude("**/*.gql")
+
+        rootPackageName.set("com.example")
+    }
 }
