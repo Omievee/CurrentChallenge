@@ -36,7 +36,6 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

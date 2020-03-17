@@ -93,10 +93,9 @@ class MainFragment : Fragment(), MainFragImpl {
     }
 
     override fun displaySelectedRestaurant(restaurant: YelpQuery.Business) {
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(
-                R.id.containerB, DetailMapFrag.newInstance(restaurant.id().toString())
-            )
+        activity?.supportFragmentManager
+            ?.beginTransaction()
+            ?.replace(R.id.containerB, DetailMapFrag.newInstance(restaurant.id().toString()))
             ?.addToBackStack("map")
             ?.commit()
     }
