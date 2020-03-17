@@ -1,0 +1,31 @@
+query YelpQuery($radius: Float!, $latitude: Float!,$longitude: Float!,$offset:Int!,$term:String!) {
+    search(term: $term,radius: $radius, latitude: $latitude,longitude: $longitude,  limit: 20, offset: $offset) {
+        total
+        business {
+            id
+            name
+            photos
+            price
+            phone
+            location {
+                address1
+            }
+        }
+    }
+}
+
+query BusinessDetail($id: String!){
+    business(id: $id){
+        name
+        phone
+        price
+        location{
+            address1
+        }
+        coordinates{
+            longitude
+            latitude
+        }
+    }
+
+}

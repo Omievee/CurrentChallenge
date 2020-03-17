@@ -1,26 +1,39 @@
 package io.github.omievee.currentchallenge.mainfragment
 
+import com.example.YelpQuery
 import io.github.omievee.currentchallenge.restaurantsmanager.RestaurantsManager
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 
 class MainFragPresenter(val view: MainFragment, val manager: RestaurantsManager) {
 
-    var disposable: Disposable? = null
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable?) {
-        this.add(disposable!!)
-    }
+    private var restaurantsDisposable: Disposable? = null
 
+    var businessDataList: List<YelpQuery.Business> = emptyList()
     fun getNearbyRestaurants() {
-
-        disposable?.dispose()
-        disposable = manager
+        restaurantsDisposable?.dispose()
+        restaurantsDisposable = manager
             .onGetRestaurants()
+            .doOnError {
+                view.onHideProgress()
+                view.onDisplayError()
+            }
+            .map {
+                businessDataList = it.data()?.search()?.business() ?: emptyList()
+            }
             .subscribe({
-
+                view.updateAdapter(businessDataList)
+                view.onHideProgress()
             }, {
                 it.printStackTrace()
             })
+    }
+
+    fun getRestaurantDetails(restaurant: YelpQuery.Business) {
+        view.displaySelectedRestaurant(restaurant)
+    }
+
+    fun onDestroy() {
+        restaurantsDisposable?.dispose()
     }
 }

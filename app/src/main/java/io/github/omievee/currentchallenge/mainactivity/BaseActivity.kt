@@ -1,5 +1,6 @@
 package io.github.omievee.currentchallenge.mainactivity
 
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class BaseActivity : ChallengeActivity(), BaseActivityImpl, View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.permissionsButton -> presenter.onRequestPermissions(this)
+            R.id.permissionsButton -> presenter.onRequestPermissions()
         }
     }
 
@@ -34,7 +35,15 @@ class BaseActivity : ChallengeActivity(), BaseActivityImpl, View.OnClickListener
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setClicks()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        checkPermissions()
+    }
+
+    private fun checkPermissions() {
+        presenter.checkPermissions(this)
     }
 
     private fun setClicks() {
@@ -67,6 +76,15 @@ class BaseActivity : ChallengeActivity(), BaseActivityImpl, View.OnClickListener
                     Toast.LENGTH_LONG
                 ).show()
             }
+        }
+    }
+
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            finish()
         }
     }
 

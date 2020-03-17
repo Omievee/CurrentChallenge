@@ -5,4 +5,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="toast_required">Location is required to continue</string>
+    <string name="text_med">123 avenue B</string>
+    <string name="pricing_not_available">Pricing Unavailable</string>
+    <string name="error_loading">Error Loading Business Details...</string>
 </resources>

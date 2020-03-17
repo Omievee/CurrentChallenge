@@ -41,7 +41,6 @@ class SolutionKT {
                 false -> OTHER_STATE_TAX
             }
         }
-
         fun calculateTaxAmount(state: String, subtotal: Double): Double {
             return if (isTaxFreeState(state)) {
                 0.0
