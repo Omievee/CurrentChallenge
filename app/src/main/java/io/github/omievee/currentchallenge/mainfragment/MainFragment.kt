@@ -45,11 +45,10 @@ class MainFragment : Fragment(), MainFragImpl {
         }
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onDisplayProgress()
-
-
 
 
         restaurantsRecycler.layoutManager =
@@ -86,6 +85,7 @@ class MainFragment : Fragment(), MainFragImpl {
     override fun onGetRestaurants() {
         presenter.getNearbyRestaurants()
     }
+
 
     override fun updateAdapter(list: List<YelpQuery.Business>) {
         error.visibility = View.GONE

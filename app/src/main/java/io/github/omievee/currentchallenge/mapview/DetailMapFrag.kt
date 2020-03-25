@@ -80,13 +80,13 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
     override fun onUpdateMap(coordinates: BusinessDetailQuery.Coordinates) {
         val lat = coordinates.latitude() ?: 0.0
         val long = coordinates.longitude() ?: 0.0
-        val coordinates = LatLng(lat, long)
+        val businessLocation = LatLng(lat, long)
         val callback = OnMapReadyCallback { googleMap ->
 
-            googleMap.addMarker(MarkerOptions().position(coordinates))
+            googleMap.addMarker(MarkerOptions().position(businessLocation))
             googleMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                    coordinates, 15f
+                    businessLocation, 15f
                 )
             )
             googleMap.uiSettings.isScrollGesturesEnabled = false
@@ -110,6 +110,7 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
     override fun onHideProgress() {
         progressBar.visibility = View.GONE
     }
+
     override fun onDisplayProgress() {
         progressBar.visibility = View.VISIBLE
     }
