@@ -15,7 +15,6 @@ class LocationManagerImpl(val context: ChallengeApp, val permissions: Permission
 
     @SuppressLint("MissingPermission")
     override fun onGetLatestCoordinates(): CurrentLocation {
-        println("PERMISSIONS>>>>>> ${permissions.onCheckNecessaryPermissions()}")
         return if (permissions.onCheckNecessaryPermissions()) {
             val lm =
                 context.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager?

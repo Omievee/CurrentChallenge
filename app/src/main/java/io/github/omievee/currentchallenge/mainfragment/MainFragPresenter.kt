@@ -44,7 +44,6 @@ class MainFragPresenter(
     }
 
     fun verifyPermissions() {
-        println("These are permissions.... ${permissions.onCheckNecessaryPermissions()}")
         if (!permissions.onCheckNecessaryPermissions()) {
             view.onUserRevokedPermissions()
         } else getNearbyRestaurants()
