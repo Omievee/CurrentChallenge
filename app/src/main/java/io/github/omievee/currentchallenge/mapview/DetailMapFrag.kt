@@ -54,7 +54,6 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onDisplayProgress()
-
     }
 
     companion object {
@@ -82,7 +81,6 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
         val long = coordinates.longitude() ?: 0.0
         val businessLocation = LatLng(lat, long)
         val callback = OnMapReadyCallback { googleMap ->
-
             googleMap.addMarker(MarkerOptions().position(businessLocation))
             googleMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
@@ -94,10 +92,12 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
         onHideProgress()
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+        presenter.onShowDetails()
     }
 
 
     override fun onUpdateDetails(business: BusinessDetailQuery.Business) {
+        detailsFrame.visibility = View.VISIBLE
         businessName.text = business.name()
         businessAddress.text = business.location()?.address1()
         pricing.text = when (business.price().isNullOrEmpty()) {

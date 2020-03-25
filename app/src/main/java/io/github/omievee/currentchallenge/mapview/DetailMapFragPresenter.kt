@@ -14,7 +14,6 @@ class DetailMapFragPresenter(val view: DetailMapFrag, val manager: RestaurantsMa
     var data: BusinessDetailQuery.Business? = null
     fun onGetRestaurantDetails(businessId: String) {
         detailDisposable?.dispose()
-        Log.d("MAP STUFF", ">>>>>>>> GETTING DETAILS....")
         detailDisposable = manager
             .onGetRestaurantDetails(businessId)
             .doOnError {
@@ -24,7 +23,6 @@ class DetailMapFragPresenter(val view: DetailMapFrag, val manager: RestaurantsMa
             }
             .doOnComplete {
                 view.onUpdateMap(coordinates ?: return@doOnComplete)
-                view.onUpdateDetails(data ?: return@doOnComplete)
             }
             .map {
                 coordinates = it.data()?.business()?.coordinates()
@@ -39,6 +37,10 @@ class DetailMapFragPresenter(val view: DetailMapFrag, val manager: RestaurantsMa
 
     fun onDestroy() {
         detailDisposable?.dispose()
+    }
+
+    fun onShowDetails() {
+        data?.let { view.onUpdateDetails(it) }
     }
 
 
