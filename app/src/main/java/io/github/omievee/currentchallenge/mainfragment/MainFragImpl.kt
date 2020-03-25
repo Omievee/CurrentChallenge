@@ -10,5 +10,6 @@ interface MainFragImpl {
     fun updateAdapter(list: List<YelpQuery.Business>)
     fun onDisplayError()
     fun displaySelectedRestaurant(restaurant: YelpQuery.Business)
+    fun onUserRevokedPermissions()
 
 }

@@ -4,5 +4,6 @@ interface BaseActivityImpl {
 
     fun onRequestPermissions()
     fun onContinueToApp()
+    fun onShowDialog()
 
 }

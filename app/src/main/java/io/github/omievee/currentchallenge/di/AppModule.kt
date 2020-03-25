@@ -6,6 +6,8 @@ import dagger.Provides
 import io.github.omievee.currentchallenge.application.ChallengeApp
 import io.github.omievee.currentchallenge.locationmanager.LocationManager
 import io.github.omievee.currentchallenge.locationmanager.LocationManagerImpl
+import io.github.omievee.currentchallenge.permissionsmanager.PermissionsImpl
+import io.github.omievee.currentchallenge.permissionsmanager.PermissionsManager
 import io.github.omievee.currentchallenge.restaurantsmanager.RestaurantsManager
 import io.github.omievee.currentchallenge.restaurantsmanager.RestaurantsManagerImpl
 import javax.inject.Singleton
@@ -17,10 +19,11 @@ class AppModule {
     @Provides
     @Singleton
     fun provideLocationManager(
-        context: ChallengeApp
+        context: ChallengeApp,
+        permission: PermissionsManager
     ): LocationManager {
         return LocationManagerImpl(
-            context
+            context, permission
         )
     }
 
@@ -37,5 +40,16 @@ class AppModule {
             locationManager
         )
     }
+
+    @Provides
+    @Singleton
+    fun providePermissionsManager(
+        context: ChallengeApp
+    ): PermissionsManager {
+        return PermissionsImpl(
+            context
+        )
+    }
+
 
 }

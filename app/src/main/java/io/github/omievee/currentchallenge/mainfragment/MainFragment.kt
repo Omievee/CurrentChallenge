@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -42,13 +43,13 @@ class MainFragment : Fragment(), MainFragImpl {
         override fun onRestaurantClicked(restaurant: YelpQuery.Business) {
             presenter.getRestaurantDetails(restaurant)
         }
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onDisplayProgress()
-        onGetRestaurants()
+
+
 
 
         restaurantsRecycler.layoutManager =
@@ -62,6 +63,11 @@ class MainFragment : Fragment(), MainFragImpl {
             )
         }
         restaurantsRecycler.addItemDecoration(itemDecorator)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.verifyPermissions()
     }
 
     companion object {
@@ -93,11 +99,17 @@ class MainFragment : Fragment(), MainFragImpl {
     }
 
     override fun displaySelectedRestaurant(restaurant: YelpQuery.Business) {
+        val id = restaurant.id().toString()
         activity?.supportFragmentManager
             ?.beginTransaction()
-            ?.replace(R.id.containerB, DetailMapFrag.newInstance(restaurant.id().toString()))
+            ?.replace(R.id.containerB, DetailMapFrag.newInstance(id))
             ?.addToBackStack("map")
             ?.commit()
+    }
+
+    override fun onUserRevokedPermissions() {
+        Toast.makeText(context, getString(R.string.toast_required), Toast.LENGTH_SHORT).show()
+        activity?.supportFragmentManager?.popBackStack()
     }
 
     override fun onDestroy() {

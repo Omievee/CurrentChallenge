@@ -1,14 +1,20 @@
 package io.github.omievee.currentchallenge.mapview
 
+import android.util.Log
+import com.example.BusinessDetailQuery
 import io.github.omievee.currentchallenge.restaurantsmanager.RestaurantsManager
 import io.reactivex.disposables.Disposable
+import okhttp3.Response
 
 class DetailMapFragPresenter(val view: DetailMapFrag, val manager: RestaurantsManager) {
 
     var detailDisposable: Disposable? = null
+
+    var coordinates: BusinessDetailQuery.Coordinates? = null
+    var data: BusinessDetailQuery.Business? = null
     fun onGetRestaurantDetails(businessId: String) {
         detailDisposable?.dispose()
-
+        Log.d("MAP STUFF", ">>>>>>>> GETTING DETAILS....")
         detailDisposable = manager
             .onGetRestaurantDetails(businessId)
             .doOnError {
@@ -16,18 +22,24 @@ class DetailMapFragPresenter(val view: DetailMapFrag, val manager: RestaurantsMa
                 view.onDisplayError()
                 it.printStackTrace()
             }
+            .doOnComplete {
+                view.onUpdateMap(coordinates ?: return@doOnComplete)
+                view.onUpdateDetails(data ?: return@doOnComplete)
+            }
+            .map {
+                coordinates = it.data()?.business()?.coordinates()
+                data = it.data()?.business()
+            }
             .subscribe({
-                view.onHideProgress()
-                view.onUpdateMap(it.data()?.business()?.coordinates() ?: return@subscribe)
-                view.onUpdateDetails(it.data()?.business() ?: return@subscribe)
+
             }, {
                 it.printStackTrace()
             })
     }
 
-
     fun onDestroy() {
         detailDisposable?.dispose()
     }
+
 
 }

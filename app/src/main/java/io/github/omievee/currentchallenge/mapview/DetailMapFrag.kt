@@ -1,16 +1,14 @@
 package io.github.omievee.currentchallenge.mapview
 
 import android.content.Context
-import androidx.fragment.app.Fragment
-
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.BusinessDetailQuery
-import com.example.YelpQuery
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -20,6 +18,7 @@ import dagger.android.support.AndroidSupportInjection
 import io.github.omievee.currentchallenge.R
 import kotlinx.android.synthetic.main.fragment_business_detail_map.*
 import javax.inject.Inject
+
 
 private const val KEY = "id"
 
@@ -34,6 +33,8 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
         arguments?.let {
             idKey = it.getString(KEY)
         }
+        Log.d("MAP STUFF", ">>>>>>>> on Create")
+        presenter.onGetRestaurantDetails(idKey ?: return)
     }
 
     override fun onCreateView(
@@ -53,7 +54,7 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onDisplayProgress()
-        presenter.onGetRestaurantDetails(idKey ?: return)
+
     }
 
     companion object {
@@ -79,19 +80,22 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
     override fun onUpdateMap(coordinates: BusinessDetailQuery.Coordinates) {
         val lat = coordinates.latitude() ?: 0.0
         val long = coordinates.longitude() ?: 0.0
+        val coordinates = LatLng(lat, long)
         val callback = OnMapReadyCallback { googleMap ->
-            val businessLocation = LatLng(lat, long)
-            googleMap.addMarker(
-                MarkerOptions().position(businessLocation)
+
+            googleMap.addMarker(MarkerOptions().position(coordinates))
+            googleMap.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    coordinates, 15f
+                )
             )
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(businessLocation))
-//            googleMap.animateCamera(CameraUpdateFactory.zoomIn());
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(15F), 2000, null)
             googleMap.uiSettings.isScrollGesturesEnabled = false
         }
+        onHideProgress()
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
     }
+
 
     override fun onUpdateDetails(business: BusinessDetailQuery.Business) {
         businessName.text = business.name()
@@ -106,8 +110,8 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
     override fun onHideProgress() {
         progressBar.visibility = View.GONE
     }
-
     override fun onDisplayProgress() {
         progressBar.visibility = View.VISIBLE
     }
+
 }

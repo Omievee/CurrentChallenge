@@ -19,15 +19,16 @@ import io.reactivex.schedulers.Schedulers
 class RestaurantsManagerImpl(
     val context: ChallengeApp,
     private val apolloClient: ApolloClient,
-    locationManager: LocationManager
+    val locationManager: LocationManager
 ) : RestaurantsManager {
 
     var searchRadius: Double = 19312.1 //12 miles approx.
     var searchTerm: String = "burritos"
-    var location = locationManager.onGetLatestCoordinates()
+
 
     @SuppressLint("CheckResult")
     override fun onGetRestaurants(): Observable<Response<YelpQuery.Data>> {
+        val location = locationManager.onGetLatestCoordinates()
         return Rx2Apollo
             .from(
                 apolloClient.query(

@@ -8,4 +8,8 @@
     <string name="text_med">123 avenue B</string>
     <string name="pricing_not_available">Pricing Unavailable</string>
     <string name="error_loading">Error Loading Business Details...</string>
+    <string name="permissions_title">Allow Permissions</string>
+    <string name="permissions_message">Location Permissions are necessary. Please allow permissions manually</string>
+    <string name="dialog_deny">Not Now</string>
+    <string name="dialog_ok">Ok</string>
 </resources>

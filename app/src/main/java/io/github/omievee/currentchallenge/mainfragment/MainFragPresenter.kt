@@ -1,16 +1,22 @@
 package io.github.omievee.currentchallenge.mainfragment
 
 import com.example.YelpQuery
+import io.github.omievee.currentchallenge.permissionsmanager.PermissionsManager
 import io.github.omievee.currentchallenge.restaurantsmanager.RestaurantsManager
 import io.reactivex.disposables.Disposable
 
 
-class MainFragPresenter(val view: MainFragment, val manager: RestaurantsManager) {
+class MainFragPresenter(
+    val view: MainFragment,
+    val manager: RestaurantsManager,
+    val permissions: PermissionsManager
+) {
 
     private var restaurantsDisposable: Disposable? = null
 
     var businessDataList: List<YelpQuery.Business> = emptyList()
     fun getNearbyRestaurants() {
+
         restaurantsDisposable?.dispose()
         restaurantsDisposable = manager
             .onGetRestaurants()
@@ -35,5 +41,12 @@ class MainFragPresenter(val view: MainFragment, val manager: RestaurantsManager)
 
     fun onDestroy() {
         restaurantsDisposable?.dispose()
+    }
+
+    fun verifyPermissions() {
+        println("These are permissions.... ${permissions.onCheckNecessaryPermissions()}")
+        if (!permissions.onCheckNecessaryPermissions()) {
+            view.onUserRevokedPermissions()
+        } else getNearbyRestaurants()
     }
 }

@@ -3,6 +3,7 @@ package io.github.omievee.currentchallenge.listview
 import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
@@ -14,7 +15,6 @@ import kotlinx.android.synthetic.main.burrito_items_view.view.*
 
 class BurritoRestaurantsView(context: Context, attributeSet: AttributeSet? = null) :
     ConstraintLayout(context, attributeSet), View.OnClickListener {
-
     var listener: RestaurantClickListener? = null
 
     init {
@@ -43,7 +43,10 @@ class BurritoRestaurantsView(context: Context, attributeSet: AttributeSet? = nul
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
-            R.id.main -> listener?.onRestaurantClicked(burritoRestaurant ?: return)
+            R.id.main -> {
+                listener?.onRestaurantClicked(burritoRestaurant ?: return)
+            }
         }
     }
+
 }

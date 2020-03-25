@@ -4,23 +4,21 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import io.github.omievee.currentchallenge.application.ChallengeApp
+import io.github.omievee.currentchallenge.permissionsmanager.PermissionsManager
 
-class LocationManagerImpl(val context: ChallengeApp) : LocationManager {
+class LocationManagerImpl(val context: ChallengeApp, val permissions: PermissionsManager) :
+    LocationManager {
 
 
+    @SuppressLint("MissingPermission")
     override fun onGetLatestCoordinates(): CurrentLocation {
-        val lm =
-            context.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager?
-        return if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        println("PERMISSIONS>>>>>> ${permissions.onCheckNecessaryPermissions()}")
+        return if (permissions.onCheckNecessaryPermissions()) {
+            val lm =
+                context.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager?
             val location = lm?.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER)
             val longitude: Double = location?.longitude ?: 0.0
             val latitude: Double = location?.latitude ?: 0.0
@@ -28,9 +26,9 @@ class LocationManagerImpl(val context: ChallengeApp) : LocationManager {
         } else {
             CurrentLocation(0.0, 0.0)
         }
-
-
     }
+
+
 }
 
 class CurrentLocation(val lat: Double, val long: Double)

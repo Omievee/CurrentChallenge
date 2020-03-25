@@ -1,33 +1,26 @@
 package io.github.omievee.currentchallenge.mainactivity
 
-import android.Manifest
-import android.app.Activity
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
+import io.github.omievee.currentchallenge.permissionsmanager.PermissionsManager
+import io.github.omievee.currentchallenge.sharedpref.UserPreference
 
-class BasePresenter(val view: BaseActivity) {
+class BasePresenter(val view: BaseActivity, val permissions: PermissionsManager) {
 
-    fun onRequestPermissions() {
+
+    fun checkPermissions(): Boolean {
+        return permissions.onCheckNecessaryPermissions()
+    }
+
+    fun requestPermissions() {
         view.onRequestPermissions()
     }
 
 
-    fun checkPermissions(context: Activity) {
-        if (permissionsAllowed(context)) {
-            view.onContinueToApp()
-        } else view.onRequestPermissions()
+    fun onPermissionsAllowed() {
+        UserPreference.isFirstRun = false
+        view.onContinueToApp()
     }
 
-
-    private fun permissionsAllowed(context: Activity): Boolean {
-        return !(ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED)
+    fun onShowManualPermissionsDialog() {
+        view.onShowDialog()
     }
-
 }

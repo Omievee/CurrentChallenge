@@ -6,6 +6,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import io.github.omievee.currentchallenge.di.DaggerAppComponent
+import io.github.omievee.currentchallenge.sharedpref.UserPreference
 import javax.inject.Inject
 
 class ChallengeApp : Application(), HasActivityInjector {
@@ -15,7 +16,9 @@ class ChallengeApp : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+        UserPreference.load(this)
         inject()
+
     }
 
     private fun inject() {
