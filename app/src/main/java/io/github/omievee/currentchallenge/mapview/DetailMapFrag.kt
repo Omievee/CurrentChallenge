@@ -33,7 +33,6 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
         arguments?.let {
             idKey = it.getString(KEY)
         }
-        Log.d("MAP STUFF", ">>>>>>>> on Create")
         presenter.onGetRestaurantDetails(idKey ?: return)
     }
 
@@ -88,11 +87,15 @@ class DetailMapFrag : Fragment(), DetailMapFragImpl {
                 )
             )
             googleMap.uiSettings.isScrollGesturesEnabled = false
+            googleMap.setOnMapLoadedCallback {
+                presenter.onShowDetails()
+            }
         }
+
         onHideProgress()
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-        presenter.onShowDetails()
+
     }
 
 
